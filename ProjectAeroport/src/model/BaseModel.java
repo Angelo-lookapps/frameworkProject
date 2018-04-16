@@ -5,11 +5,10 @@ package model;
  */
 public abstract class BaseModel {
     String id;
-    String nomTable;
+ 
 
-    public BaseModel(String id, String nomTable) {
+    public BaseModel(String id) {
         this.id = id;
-        this.nomTable = nomTable;
     }
     public BaseModel(){}
 
@@ -21,12 +20,4 @@ public abstract class BaseModel {
         this.id = id;
     }
 
-    public String getNomTable() {
-        return nomTable;
-    }
-
-    public void setNomTable(String nomTable) {
-        this.nomTable = nomTable;
-    }
-    
 }

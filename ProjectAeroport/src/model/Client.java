@@ -5,48 +5,28 @@
  */
 package model;
 
-import connect.Connexion;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import outil.Fonction;
+import annotations.NomTable;
 
 /**
  *
  * @author Angelo-KabyLake
  */
+@NomTable(value = "Client", predicat = "CLT")
 public class Client extends BaseModel{
     //private String id;
     private String nom;
     private String prenom;
 
     //Constructeur
-    public Client(String id, String nomTable) {
-        super(id, nomTable);
-    }
-
-    public Client( String id, String nomTable, String nom, String prenom) {
-        super(id, nomTable);
+  
+    public Client( String id, String nom, String prenom) {
+        super(id);
         this.nom = nom;
         this.prenom = prenom;
     }
-    public Client(){}
-    
+    public Client(){}  
     
     ///SETTERS && GETTERS
-    
-    /*public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }*/
   
     public String getNom() {
         return nom;

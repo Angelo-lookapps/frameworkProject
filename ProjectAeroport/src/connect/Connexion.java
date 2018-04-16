@@ -31,7 +31,7 @@ public class Connexion {
                     throw new Exception("Erreur de user et mdp: getConnexion");
                 }
                 if(database.equals("")){
-                    urlDB = "jdbc:sqlserver://localhost:1433;databaseName=santePredict;";
+                    urlDB = "jdbc:sqlserver://localhost:1433;databaseName=aeroport;";
                 } 
 		try{
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -48,7 +48,7 @@ public class Connexion {
             String mdp = "itu";
             try{
                     this.getConnexion(user, mdp);
-                    System.out.println("Connexion has been established !");
+                    //System.out.println("Connexion has been established !");
             }catch(Exception e){
                 e.printStackTrace();
             }

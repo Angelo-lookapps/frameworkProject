@@ -46,15 +46,16 @@ public class Fonction {
             Statement stmt = (Statement) con.createStatement();
             
             sql = "select next value for " + seq;
+            
             ResultSet rs = stmt.executeQuery(sql);
             Boolean exist = rs.next();
                 while (exist)
                 {
-                    retour = rs.getInt(0);
+                    retour = rs.getInt(1);
+                    exist = rs.next();
                 }
                 
                 retur1 = concat(pre ,""+retour);    
-                
             
             }catch(Exception e){
                 throw e;

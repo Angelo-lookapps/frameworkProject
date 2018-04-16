@@ -14,9 +14,9 @@ import model.BaseModel;
  * @author Angelo-KabyLake
  */
 public interface GeneriqueService {
-    public ArrayList<BaseModel> findAll(BaseModel bm)throws Exception;
-    public ArrayList<BaseModel> find(Connection con, BaseModel bm, String condition)throws Exception;
-    public ArrayList<BaseModel> find(BaseModel bm, String condition)throws Exception;
+    public BaseModel[] findAll(Connection con, BaseModel bm)throws Exception;
+    public BaseModel[] find(Connection con, BaseModel bm, String condition)throws Exception;
+    public BaseModel[] find(BaseModel bm, String condition)throws Exception;
     
     public void insert(Connection con, BaseModel bm)throws Exception;
     public void insert(BaseModel bm)throws Exception;

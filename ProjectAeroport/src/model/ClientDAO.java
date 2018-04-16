@@ -48,8 +48,7 @@ public class ClientDAO {
 
 		tabMed = new Client[listMed.size()];
 		listMed.copyInto(tabMed);
-		rs.close();
-		stmt.close();
+		
 		}catch(Exception e){
 			throw e;
 		}
@@ -114,6 +113,7 @@ public class ClientDAO {
       
         Fonction fon = new Fonction();
         PreparedStatement stmt = null;
+        int ret = 0;
         try{
 
             stmt = con.prepareStatement("INSERT INTO Client(id, nom, prenom) VALUES(?,?,?)");
@@ -121,12 +121,12 @@ public class ClientDAO {
             stmt.setString(1, fon.getSeq(pre, "seq_Client"));
             stmt.setString(2, client.getNom());
             stmt.setString(3, client.getPrenom());
-
             stmt.executeUpdate();
 
         }
         catch(Exception e){
-            throw new Exception("Insertion echoué!!!");
+            //throw new Exception("Insertion echoué!!!");
+            e.printStackTrace();
         }
         finally{
             if(stmt!=null){
@@ -140,7 +140,7 @@ public class ClientDAO {
     public void insert(Client client)throws Exception{
         Connexion connex = new Connexion();
         Connection con = connex.getConnexion();
-    
+  
         try{
 
            this.insert(con, client);
@@ -155,6 +155,7 @@ public class ClientDAO {
                con.close();
            };
         }
+       
     } 
    
     public void update(Connection con, Client nouveau, String condition)throws Exception{
