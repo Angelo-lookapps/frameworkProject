@@ -10,7 +10,6 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 /**
  *
  * @author Angelo-KabyLake
@@ -21,4 +20,5 @@ import java.lang.annotation.Target;
 public @interface NomTable {
     String value();
     String predicat();
+    
 }

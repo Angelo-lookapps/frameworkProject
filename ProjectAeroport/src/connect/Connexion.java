@@ -8,6 +8,7 @@ package connect;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+
 /**
  *
  * @author Angelo-KabyLake
@@ -31,7 +32,7 @@ public class Connexion {
                     throw new Exception("Erreur de user et mdp: getConnexion");
                 }
                 if(database.equals("")){
-                    urlDB = "jdbc:sqlserver://localhost:1433;databaseName=aeroport;";
+                    urlDB = "jdbc:sqlserver://localhost:1433;databaseName=aeroport2;";
                 } 
 		try{
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");

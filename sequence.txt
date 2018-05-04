@@ -1,0 +1,18 @@
+ Field[] attributs = c.getDeclaredFields();
+        String get = "get";
+        String sequence = "seq_";
+        String pret = "";
+        Method method = null;
+        Object[] paramater = {};
+
+
+  id = fonction.getSeq(pret, sequence);
+            Object[] premier = {rs.getObject(1)};
+                
+            method = temp.getClass().getMethod("setId", String.class);  //setNom(String
+            method.invoke( temp, premier);
+
+
+1- DoSetter(BaseModel cible)
+2- DoGetter(BaseModel update)
+3- DoUpdate(BaseModel cible, BaseModel update)
