@@ -91,7 +91,7 @@ public class Fonction {
         Class c = bm.getClass();
         Field[] attributs = c.getDeclaredFields();
         String get = "get";
-        String set = "set";
+        //String set = "set";
         Method method = null;
         String sql = "";
         Object[] paramater = {};
@@ -153,13 +153,13 @@ public class Fonction {
             sql+=" where 1<9 AND "+condition;
         }
         else if(typeQuery.equalsIgnoreCase("insert") && condition.equals("")){
-            String sequence = "seq_";
+            //String sequence = "seq_";
             String insert = " VALUES(";
-            String pret = "";
+            //String pret = "";
             NomTable annot = (NomTable)c.getAnnotation(NomTable.class);
-            sequence+=annot.value();
+            //sequence+=annot.value();
             sql +="INSERT INTO "+annot.value()+" (id,";
-             pret = annot.predicat();
+            // pret = annot.predicat();
             
             for(int i=0;i<attributs.length;i++){
                 if(attributs.length-1==i){
@@ -174,12 +174,12 @@ public class Fonction {
             sql+=insert;
         }
         else if(typeQuery.equalsIgnoreCase("update") && condition.equals("")){
-            String sequence = "seq_";
-            String pret = ""; 
+            //String sequence = "seq_";
+            //String pret = ""; 
             NomTable annot = (NomTable)c.getAnnotation(NomTable.class);
-            sequence+=annot.value();
+            //sequence+=annot.value();
             sql+= "UPDATE " + annot.value()+" SET id=? ,";
-            pret = annot.predicat();
+           // pret = annot.predicat();
             
             for(int i=0;i<attributs.length;i++){
                 if(attributs.length-1==i){
@@ -216,7 +216,6 @@ public class Fonction {
             BaseModel temp = (BaseModel)c.newInstance();
             Method method2 = null;
             Object[] premier = {rs.getString(1)};
-
             method2 = temp.getClass().getMethod("setId", String.class);  //setNom(String
             method2.invoke( temp, premier);
            int compteur = 2;

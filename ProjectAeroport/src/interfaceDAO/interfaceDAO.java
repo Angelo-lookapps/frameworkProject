@@ -6,6 +6,7 @@
 package interfaceDAO;
 
 import java.sql.Connection;
+import java.util.List;
 import model.BaseModel;
 
 /**
@@ -13,9 +14,9 @@ import model.BaseModel;
  * @author ITU
  */
 public interface interfaceDAO {
-    BaseModel[] find(Connection con, String table, String where) throws Exception;
+    List find(Connection con, String table, String where) throws Exception;
 
-    BaseModel[] find(String table, String where) throws Exception;
+    List find(String table, String where) throws Exception;
 
     void insert(Connection con, BaseModel baseModel) throws Exception;
 

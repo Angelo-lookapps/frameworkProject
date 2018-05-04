@@ -10,8 +10,8 @@ import interfaceDAO.interfaceDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Vector;
 import outil.Fonction;
 
@@ -19,12 +19,13 @@ import outil.Fonction;
  *
  * @author Ryan
  */
-public abstract class ReservationDAO implements interfaceDAO{
+public class ReservationDAO implements interfaceDAO{
     String pre = "RSV";
     
-    public Reservation[] find(Connection con, String table, String where) throws Exception{
+    @Override
+    public List find(Connection con, String table, String where) throws Exception{
 		Reservation[] tabMed;
-		Vector listMed = new Vector();
+		List listMed = new Vector();
                 Statement stmt = null;
                 ResultSet rs = null;
                 String sql = "select * from "+table;
@@ -48,9 +49,6 @@ public abstract class ReservationDAO implements interfaceDAO{
                         listMed.add(temporaire);
                         exist = rs.next();
                 } 
-
-		tabMed = new Reservation[listMed.size()];
-		listMed.copyInto(tabMed);
 		
 		}catch(Exception e){
 			throw e;
@@ -66,15 +64,16 @@ public abstract class ReservationDAO implements interfaceDAO{
                         con.close();
                     }
 		}
-		return tabMed;
+		return listMed;
 		
     }
    
     
-     public Reservation[] find(String table,String where) throws Exception{
+    @Override
+     public List find(String table,String where) throws Exception{
         Connexion connex = new Connexion();
         Connection con = connex.getConnexion();
-        Reservation[] ret = null;
+        List ret = null;
       
         try{
            ret = this.find(con, table, where);
@@ -228,5 +227,25 @@ public abstract class ReservationDAO implements interfaceDAO{
                con.close();
            };
         }
+    }
+
+    @Override
+    public void insert(Connection con, BaseModel baseModel) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void insert(BaseModel baseModel) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(Connection con, BaseModel nouveau, String condition) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(BaseModel nouveau, String condition) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

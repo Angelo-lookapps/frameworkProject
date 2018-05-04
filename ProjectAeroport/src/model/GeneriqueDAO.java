@@ -7,6 +7,7 @@ package model;
 
 import annotations.NomTable;
 import connect.Connexion;
+import dao.hibernate.OutilDAO;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 public class GeneriqueDAO implements GeneriqueService{
     private Fonction fonction = new Fonction();
-    
+    private OutilDAO outilDAO = new OutilDAO();
     @Override
     public void findById(BaseModel bm) throws Exception {
         Connexion connex = new Connexion();
@@ -38,7 +39,7 @@ public class GeneriqueDAO implements GeneriqueService{
         Vector vect = new Vector();
         Class c = bm.getClass();
         Field[] attributs = c.getDeclaredFields();
-        String set = "set";
+        //String set = "set";
         try{
             sql+= fonction.getQueryString(bm, "findById", "");
             
@@ -58,10 +59,10 @@ public class GeneriqueDAO implements GeneriqueService{
                 for(Field f: attributs){
                     Class type = f.getType();
                     Object[] vao = {rs.getString(compteur)};
-                    set = "set";
+                    /*set = "set";
                     set += f.getName().substring(0, 1).toUpperCase();
-                    set += f.getName().substring(1);
-                    method = bm.getClass().getMethod(set, type);  //setNom(String
+                    set += f.getName().substring(1);*/
+                    method = outilDAO.getSetter(bm, f); //setNom(String
                     method.invoke( bm, vao);
                     compteur++;
                 }
@@ -71,7 +72,8 @@ public class GeneriqueDAO implements GeneriqueService{
             ret = vect;
             bm = ret.get(0);
         }catch(Exception e){
-                System.out.println(e.getMessage());
+               // System.out.println(e.getMessage());
+            throw e;
         }
         finally{
             if(stmt!=null){
@@ -127,9 +129,11 @@ public class GeneriqueDAO implements GeneriqueService{
                     Class type = f.getType();
                     Object[] vao = {rs.getString(compteur)};
                     set = "set";
-                    set += f.getName().substring(0, 1).toUpperCase();
-                    set += f.getName().substring(1);
+                    /*set += f.getName().substring(0, 1).toUpperCase();
+                    set += f.getName().substring(1);*/
+                    set += outilDAO.capitalize(f);
                     method = temp.getClass().getMethod(set, type);  //setNom(String
+                    //method =  outilDAO.getSetter(bm, f);
                     method.invoke( temp, vao);
                     compteur++;
                 }
@@ -138,7 +142,8 @@ public class GeneriqueDAO implements GeneriqueService{
             }
             ret = vect;
         }catch(Exception e){
-            System.out.println(e.getMessage());
+           // System.out.println(e.getMessage());
+           throw e;
         }
         finally{
             if(stmt!=null){
@@ -186,8 +191,9 @@ public class GeneriqueDAO implements GeneriqueService{
                     Class type = f.getType();
                     Object[] vao = {rs.getObject(compteur)};
                     set = "set";
-                    set += f.getName().substring(0, 1).toUpperCase();
-                    set += f.getName().substring(1);
+                    /*set += f.getName().substring(0, 1).toUpperCase();
+                    set += f.getName().substring(1);*/
+                    set += outilDAO.capitalize(f);
                     //System.out.println("TAILLE = "+type);
                     method = temp.getClass().getMethod(set, type); //setNom(String
                     
@@ -216,13 +222,12 @@ public class GeneriqueDAO implements GeneriqueService{
                 exist = rs.next(); 
             }
             ret = vect;
-               /* System.out.println("Valeur = "+rs.getString(1)+" | "+rs.getString(2)+" | "+rs.getString(3)+" | "+rs.getString(4));
-
-                
-                  exist = rs.next(); 
+            /* System.out.println("Valeur = "+rs.getString(1)+" | "+rs.getString(2)+" | "+rs.getString(3)+" | "+rs.getString(4));
+                exist = rs.next(); 
             }*/
         }catch(Exception e){
-                e.printStackTrace();
+               // e.printStackTrace();
+            throw e;
         }
         finally{
             if(stmt!=null){
@@ -252,7 +257,7 @@ public class GeneriqueDAO implements GeneriqueService{
         String set = "set";
         try{
             sql += fonction.getQueryString(bm, "findBy", "");
-            System.out.println("My sql = "+sql);
+            //System.out.println("My sql = "+sql);
            
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
@@ -272,11 +277,26 @@ public class GeneriqueDAO implements GeneriqueService{
                     Class type = f.getType();
                     Object[] vao = {rs.getString(compteur)};
                     set = "set";
-                    set += f.getName().substring(0, 1).toUpperCase();
-                    set += f.getName().substring(1);
+                    /*set += f.getName().substring(0, 1).toUpperCase();
+                    set += f.getName().substring(1);*/
+                    set += outilDAO.capitalize(f);
                     method2 = temp.getClass().getMethod(set, type);  //setNom(String
-                
-                    method2.invoke(temp, vao);
+                  //  method2.invoke(temp, vao);
+                    if(method2.getParameterTypes()[0].getSimpleName().equalsIgnoreCase("double")){
+                        method2.invoke(temp, rs.getDouble(compteur));
+                    }
+                    else if(method2.getParameterTypes()[0].getSimpleName().equalsIgnoreCase("string")){
+                        method2.invoke(temp, rs.getString(compteur));
+                    }
+                    else if(method2.getParameterTypes()[0].getSimpleName().equalsIgnoreCase("int")){
+                        method2.invoke(temp, rs.getInt(compteur));
+                    }
+                    else if(method2.getParameterTypes()[0].getSimpleName().equalsIgnoreCase("float")){
+                        method2.invoke(temp, rs.getFloat(compteur));
+                    }
+                    else{
+                        method2.invoke(temp, rs.getObject(compteur));
+                    }
                     compteur++;
                 }
                 vect.add((BaseModel)temp);
@@ -285,7 +305,8 @@ public class GeneriqueDAO implements GeneriqueService{
             ret = vect;
                     
         }catch(Exception e){
-                e.printStackTrace();
+                //e.printStackTrace();
+            throw e;
         }
         finally{
             if(stmt!=null){
@@ -335,15 +356,17 @@ public class GeneriqueDAO implements GeneriqueService{
         try{
        
             sql+= fonction.getQueryString(bm, "insert", "");
-            NomTable annot = (NomTable)c.getAnnotation(NomTable.class);
+           /* NomTable annot = (NomTable)c.getAnnotation(NomTable.class);
             pret = annot.predicat();
             stmt = con.prepareStatement(sql);
-            stmt.setObject(1, fonction.getSeq( pret, sequence));
+            stmt.setObject(1, fonction.getSeq( pret, sequence));*/
+            stmt.setObject(1, outilDAO.getSequenceId(bm));
             int i = 2;
             for(Field f: attributs){
                 get = "get";
-                get += f.getName().substring(0, 1).toUpperCase();
-                get += f.getName().substring(1);
+               /* get += f.getName().substring(0, 1).toUpperCase();
+                get += f.getName().substring(1);*/
+                get += outilDAO.capitalize(f);
                 method = c.getMethod(get);  //setNom(String
                 //System.out.println("method = "+method.getName());
                 stmt.setObject(i, method.invoke( bm, paramater).toString());
@@ -352,7 +375,8 @@ public class GeneriqueDAO implements GeneriqueService{
             int e = stmt.executeUpdate();
             System.out.println("Row insert : "+e);
         }catch(Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
+            throw e;
         }
         finally{
             if(stmt!=null){
@@ -372,7 +396,8 @@ public class GeneriqueDAO implements GeneriqueService{
         try{
             insert(con, bm);
         } catch(Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
+            throw e;
         }
         finally{
             if(con!=null){
@@ -400,25 +425,26 @@ public class GeneriqueDAO implements GeneriqueService{
             stmt = con.prepareStatement(sql);
             method = c.getMethod("getId");
             stmt.setObject(1, method.invoke( bm, paramater).toString());
-            
             int i = 2;
             for(Field f: attributs){
                 get = "get";
+                /*
                 get += f.getName().substring(0, 1).toUpperCase();
-                get += f.getName().substring(1);
+                get += f.getName().substring(1);*/
+                get += outilDAO.capitalize(f);
                 method = c.getMethod(get);  //setNom(String
-                System.out.println("method = "+method.getName());
+               // System.out.println("method = "+method.getName());
                 stmt.setObject(i, method.invoke( bm, paramater).toString());
                 i++;
             }
             method = c.getMethod("getId");
             //System.out.println("index = "+i);
-            stmt.setObject(i, method.invoke( bm, paramater).toString());
-            
+            stmt.setObject(i, method.invoke( bm, paramater).toString());           
             int e = stmt.executeUpdate();
             System.out.println("Row modify : "+e);
         }catch(Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
+            throw e;
         }
         finally{
             if(stmt!=null){
@@ -434,11 +460,11 @@ public class GeneriqueDAO implements GeneriqueService{
     public void update(BaseModel bm, String condition) throws Exception {
         Connexion connex = new Connexion();
         Connection con = connex.getConnexion();
-        List<BaseModel> ret=null;
         try{
             update(con, bm, condition);
         } catch(Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
+            throw e;
         }
         finally{
             if(con!=null){
@@ -451,24 +477,21 @@ public class GeneriqueDAO implements GeneriqueService{
     public void delete(Connection con, BaseModel bm) throws Exception {
         
         PreparedStatement stmt = null;
-        
         String sql = "";
         Class c = bm.getClass();
-        
         Field[] attributs = c.getDeclaredFields();
         Object[] paramater = {};
         try{
-       
-            sql+= fonction.getQueryString(bm, "delete", "");
+            sql += fonction.getQueryString(bm, "delete", "");
             Method method = null;
             stmt = con.prepareStatement(sql);
             method = c.getMethod("getId");
             stmt.setObject(1, method.invoke( bm, paramater).toString());
-            int e = stmt.executeUpdate();
-            
-            //System.out.println("Row deleted : "+e);
+            int ee = stmt.executeUpdate();
+            System.out.println("Row deleted : "+ee);
         }catch(Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
+            throw e;
         }
         finally{
             if(stmt!=null){
@@ -488,7 +511,8 @@ public class GeneriqueDAO implements GeneriqueService{
         try{
             delete(con, bm);
         } catch(Exception e){
-            e.printStackTrace();
+            throw e;    
+        // e.printStackTrace();
         }
         finally{
             if(con!=null){
@@ -535,19 +559,21 @@ public class GeneriqueDAO implements GeneriqueService{
                     Class type = f.getType();
                     Object[] vao = {rs.getString(compteur)};
                     set = "set";
-                    set += f.getName().substring(0, 1).toUpperCase();
-                    set += f.getName().substring(1);
+                    /*set += f.getName().substring(0, 1).toUpperCase();
+                    set += f.getName().substring(1);*/
+                    set += outilDAO.capitalize(f);
                     method = temp.getClass().getMethod(set, type);  //setNom(String
                     method.invoke( temp, vao);
                     compteur++;
-                }
-                vect.add(temp);
+                } 
+               vect.add(temp);
                 exist = rs.next(); 
             }
             ret = vect;
             
        }catch(Exception e){
-           e.printStackTrace();
+           //e.printStackTrace();
+           throw e;
        }
       return ret;
     }

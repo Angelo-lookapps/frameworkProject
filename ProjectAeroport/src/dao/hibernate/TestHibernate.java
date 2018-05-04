@@ -27,7 +27,7 @@ public class TestHibernate {
             }
             
             Client clt = new Client("test0001","","");
-            dao.delete(clt);
+            //dao.delete(clt);
             //dao.update(clt, "test0001");
             //Client temp = (Client) dao.findById2(clt);
             //System.out.println(clt.getId()+" | "+clt.getNom()+" | "+clt.getPrenom());

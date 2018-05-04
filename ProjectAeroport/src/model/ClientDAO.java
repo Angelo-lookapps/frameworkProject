@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Vector;
 import outil.Fonction;
 
@@ -21,57 +22,55 @@ import outil.Fonction;
 public class ClientDAO {
     String pre = "CLT";
     
-    public Client[] find(Connection con, String table, String where) throws Exception{
-		Client[] tabMed;
-		Vector listMed = new Vector();
-                Statement stmt = null;
-                ResultSet rs = null;
-                String sql = "select * from "+table;
-                
-		try{
-                if(!where.equals("")){
-                    sql = "select * from "+table+" where 1<2 AND "+where;
-                }
-                stmt = con.createStatement();
-                
-		rs = stmt.executeQuery(sql);
-                
-		Boolean exist = rs.next();
-                while(exist){
-                        Client temporaire = new Client();
-                        temporaire.setId(rs.getString(1));
-                        temporaire.setNom(rs.getString(2));
-                        temporaire.setPrenom(rs.getString(3));
-                        listMed.add(temporaire);
-                        exist = rs.next();
-                } 
+    public List find(Connection con, String table, String where) throws Exception{
+            List<Client> listMed = new Vector();
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            String sql = "select * from "+table;
 
-		tabMed = new Client[listMed.size()];
-		listMed.copyInto(tabMed);
-		
-		}catch(Exception e){
-			throw e;
-		}
-		finally{
-                    if(stmt!=null){
-                        stmt.close();
-                    }
-                    if(rs!=null){
-                        rs.close();
-                    }
-                    if(con!=null){
-                        con.close();
-                    }
-		}
-		return tabMed;
+            try{
+            if(!where.equals("")){
+                stmt = con.prepareStatement("select * from "+table+" where 1<2 AND "+where);
+            }
+            stmt = con.prepareStatement(sql);
+
+            rs = stmt.executeQuery();
+
+            Boolean exist = rs.next();
+            while(exist){
+                    Client temporaire = new Client();
+                    temporaire.setId(rs.getString(1));
+                    temporaire.setNom(rs.getString(2));
+                    temporaire.setPrenom(rs.getString(3));
+                    listMed.add(temporaire);
+                    exist = rs.next();
+            } 
+           // System.out.println("ICI Taille = "+listMed.get(0).getPrixUnitaire());
+            
+            }catch(Exception e){
+                //throw e;
+                e.printStackTrace();
+            }
+            finally{
+                if(stmt!=null){
+                    stmt.close();
+                }
+                if(rs!=null){
+                    rs.close();
+                }
+                if(con!=null){
+                    con.close();
+                }
+            }
+            return listMed;
 		
     }
    
     
-     public Client[] find(String table,String where) throws Exception{
+     public List find(String table,String where) throws Exception{
         Connexion connex = new Connexion();
         Connection con = connex.getConnexion();
-        Client[] ret = null;
+        List ret = null;
       
         try{
            ret = this.find(con, table, where);

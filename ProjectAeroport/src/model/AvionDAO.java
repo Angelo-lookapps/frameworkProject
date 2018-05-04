@@ -10,7 +10,7 @@ import interfaceDAO.interfaceDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.List;
 import java.util.Vector;
 import outil.Fonction;
 
@@ -18,12 +18,13 @@ import outil.Fonction;
  *
  * @author ITU
  */
-public abstract class AvionDAO implements interfaceDAO{
+public class AvionDAO implements interfaceDAO{
     String pre = "AVI";
     
-    public Avion[] find(Connection con, String table, String where) throws Exception{
-		Avion[] tabMed;
-		Vector listMed = new Vector();
+    @Override
+    public List find(Connection con, String table, String where) throws Exception{
+		List listMed;
+                listMed = new Vector();
                 PreparedStatement stmt = null;
                 ResultSet rs = null;
                 String sql = "select * from "+table;
@@ -42,12 +43,10 @@ public abstract class AvionDAO implements interfaceDAO{
                         temporaire.setId(rs.getString(1));
                         temporaire.setNom(rs.getString(2));
                         temporaire.setPrenom(rs.getString(3));
+                        
                         listMed.add(temporaire);
                         exist = rs.next();
                 } 
-
-		tabMed = new Avion[listMed.size()];
-		listMed.copyInto(tabMed);
 		
 		}catch(Exception e){
 			throw e;
@@ -63,15 +62,16 @@ public abstract class AvionDAO implements interfaceDAO{
                         con.close();
                     }
 		}
-		return tabMed;
+		return listMed;
 		
     }
    
     
-     public Avion[] find(String table,String where) throws Exception{
+    @Override
+     public List find(String table,String where) throws Exception{
         Connexion connex = new Connexion();
         Connection con = connex.getConnexion();
-        Avion[] ret = null;
+        List ret = null;
       
         try{
            ret = this.find(con, table, where);
@@ -195,6 +195,36 @@ public abstract class AvionDAO implements interfaceDAO{
                con.close();
            }
         }
+    }
+
+    @Override
+    public void insert(Connection con, BaseModel baseModel) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void insert(BaseModel baseModel) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(Connection con, BaseModel nouveau, String condition) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(BaseModel nouveau, String condition) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(Connection con, String id) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(String id) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -10,7 +10,7 @@ import interfaceDAO.interfaceDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.List;
 import java.util.Vector;
 import outil.Fonction;
 
@@ -18,63 +18,64 @@ import outil.Fonction;
  *
  * @author ITU
  */
-public abstract class BilletDAO implements interfaceDAO{
+public class BilletDAO implements interfaceDAO{
     String pre = "BLT";
     
     
-    public Billet[] find(Connection con, String table, String where) throws Exception{
-		Billet[] tabMed;
-		Vector listMed = new Vector();
-                PreparedStatement stmt = null;
-                ResultSet rs = null;
-                String sql = "select * from "+table;
-                
-		try{
-                if(!where.equals("")){
-                    stmt = con.prepareStatement("select * from "+table+" where 1<2 AND "+where);
-                }
-                
-                stmt = con.prepareStatement(sql);
-                
-		rs = stmt.executeQuery();
-                
-		Boolean exist = rs.next();
-                while(exist){
-                        Client temporaire = new Client();
-                        temporaire.setId(rs.getString(1));
-                        temporaire.setNom(rs.getString(2));
-                        temporaire.setPrenom(rs.getString(3));
-                        listMed.add(temporaire);
-                        exist = rs.next();
-                } 
+    @Override
+    public List find(Connection con, String table, String where) throws Exception{
+            List<Billet> listMed = new Vector();
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            String sql = "select * from "+table;
 
-		tabMed = new Billet[listMed.size()];
-		listMed.copyInto(tabMed);
-		
-		}catch(Exception e){
-			throw e;
-		}
-		finally{
-                    if(stmt!=null){
-                        stmt.close();
-                    }
-                    if(rs!=null){
-                        rs.close();
-                    }
-                    if(con!=null){
-                        con.close();
-                    }
-		}
-		return tabMed;
+            try{
+            if(!where.equals("")){
+                stmt = con.prepareStatement("select * from "+table+" where 1<2 AND "+where);
+            }
+
+            stmt = con.prepareStatement(sql);
+
+            rs = stmt.executeQuery();
+
+            Boolean exist = rs.next();
+            while(exist){
+                    Billet temporaire = new Billet();
+                    temporaire.setId(rs.getString(1));
+                    temporaire.setIdDestination(rs.getString(2));
+                    temporaire.setDaty(rs.getString(3));
+                    temporaire.setPrixUnitaire(rs.getFloat(4));
+                    listMed.add(temporaire);
+                    exist = rs.next();
+            } 
+           // System.out.println("ICI Taille = "+listMed.get(0).getPrixUnitaire());
+            
+            }catch(Exception e){
+                //throw e;
+                e.printStackTrace();
+            }
+            finally{
+                if(stmt!=null){
+                    stmt.close();
+                }
+                if(rs!=null){
+                    rs.close();
+                }
+                if(con!=null){
+                    con.close();
+                }
+            }
+            return listMed;
 		
     }
    
     
     
-     public Billet[] find(String table,String where) throws Exception{
+    @Override
+     public List find(String table,String where) throws Exception{
         Connexion connex = new Connexion();
         Connection con = connex.getConnexion();
-        Billet[] ret = null;
+        List ret = null;
       
         try{
            ret = this.find(con, table, where);
@@ -241,5 +242,25 @@ public abstract class BilletDAO implements interfaceDAO{
                con.close();
            }
         }
+    }
+
+    @Override
+    public void insert(Connection con, BaseModel baseModel) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void insert(BaseModel baseModel) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(Connection con, BaseModel nouveau, String condition) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(BaseModel nouveau, String condition) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

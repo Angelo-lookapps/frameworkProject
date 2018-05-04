@@ -63,6 +63,8 @@ public class HibernateDAO implements GeneriqueService{
             session.getTransaction().commit();
             
             System.out.println("Done!!!");
+        }catch(Exception e ){
+            throw e;
         }finally{
             factory.close();
         }
@@ -107,6 +109,8 @@ public class HibernateDAO implements GeneriqueService{
             session.getTransaction().commit();
             
             System.out.println("Done!!!");
+        }catch(Exception e ){
+            throw e;
         }finally{
             factory.close();
         }
@@ -130,12 +134,12 @@ public class HibernateDAO implements GeneriqueService{
     }
     public void controllSessionFactory(Class c){
         try{
-        if(factoryGenerale == null || factoryGenerale.isClosed()){
-            this.factoryGenerale = new Configuration()
-                                    .configure("hibernate.cfg.xml")
-                                    .addAnnotatedClass(c)
-                                    .buildSessionFactory();
-        }
+            if(factoryGenerale == null || factoryGenerale.isClosed()){
+                this.factoryGenerale = new Configuration()
+                                        .configure("hibernate.cfg.xml")
+                                        .addAnnotatedClass(c)
+                                        .buildSessionFactory();
+            }
         }catch(Exception e){
             throw e;
         }
@@ -176,6 +180,8 @@ public class HibernateDAO implements GeneriqueService{
             session.getTransaction().commit();
             
             System.out.println("Done!!!");
+        }catch(Exception e ){
+            throw e;
         }finally{
             factory.close();
         }
@@ -193,7 +199,7 @@ public class HibernateDAO implements GeneriqueService{
             getter = outilDAO.getGetter(cible, f);
             ret = getter.invoke(cible.getClass(), null);
 
-        } catch (Exception ex) {
+        }catch (Exception ex) {
             throw ex;
         }
         return ret;
@@ -276,6 +282,8 @@ public class HibernateDAO implements GeneriqueService{
             session.getTransaction().commit();
             
             System.out.println("Done!!!");
+        }catch(Exception e ){
+            throw e;
         }finally{
             factory.close();
         }

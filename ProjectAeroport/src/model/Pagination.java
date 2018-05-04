@@ -47,7 +47,7 @@ public class Pagination {
     public Pagination(BaseModel bm, int nombreLigneParPage) throws Exception {
         List<BaseModel> temp = dao.findAll(bm);
         
-        System.out.println("TAILLE = "+temp.size());
+        //System.out.println("TAILLE = "+temp.size());
        
         int taille = temp.size()/nombreLigneParPage;
         //System.out.println("taille TOTAL = "+temp.length);
@@ -67,7 +67,7 @@ public class Pagination {
         if(getNombreLigneParPage()!=0){
             page = dao.pagination(bm,1 , getNombreLigneParPage());
             this.setPageActuel(page);
-            System.out.println("ANATY PAGINATION ");
+            //System.out.println("ANATY PAGINATION ");
         }
         typage = bm;
        
